@@ -21,15 +21,27 @@ public class WebSecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http.csrf().disable();
         http.cors();
+
         http.authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/usuarios/Publicaciones/listar").permitAll()
+                .requestMatchers("/api/usuarios/Publicaciones/detallePublicacion/**").permitAll()
+                .requestMatchers("/api/usuarios/Publicaciones/listarCategoria/**").permitAll()
+                .requestMatchers("/api/categorias/**").permitAll()
+                .requestMatchers("/api/usuarios/usuarioPorCorreo/**").permitAll()
+                .requestMatchers("/api/imagenes/**").permitAll()
+                .requestMatchers("/api/usuarios/Publicaciones/listarComentarios/**").permitAll()
+
                 .anyRequest().authenticated();
         http.exceptionHandling().authenticationEntryPoint(jwtEntryPoint);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authenticationProvider(authenticationProvider);
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+        //http.authorizeHttpRequests().anyRequest().permitAll();
+        //return http.build();
     }
 }

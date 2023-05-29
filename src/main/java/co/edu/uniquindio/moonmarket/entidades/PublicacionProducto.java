@@ -19,10 +19,9 @@ import java.util.List;
 public class PublicacionProducto implements Serializable {
 
     //Dos llaves foráneas
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_producto")
     private Producto producto;
-
     @ManyToOne
     @JoinColumn(name = "cedula_creador")
     @JsonBackReference
@@ -46,11 +45,9 @@ public class PublicacionProducto implements Serializable {
     private List<Imagen> imagenes;
 
     @OneToMany(mappedBy = "publicacion")
-
     private List<Comentario> comentarios;
 
     @OneToMany(mappedBy = "publicacion")
-
     private List<CompraProducto> listaCompraProductos;
 
     //Este relacion es que se puede agregar una publicacion como favorito
@@ -61,4 +58,13 @@ public class PublicacionProducto implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "cedula_usuario"))
     private List<Usuario> favoriteros;
 
+    @Override
+    public String toString() {
+        return "PublicacionProducto{" +
+                "idPublicacionProducto=" + idPublicacionProducto +
+                ", estado=" + estado +
+                ", titulo='" + titulo + '\'' +
+                ", precio=" + precio +
+                '}';
+    }
 }

@@ -20,7 +20,7 @@ public class ProductoDTO {
     private String nombre;
     private String descripcion;
     private List<CategoriaDTO> categorias;
-    private List<PublicacionProductoDTO> publicaciones;
+    //private List<PublicacionProductoDTO> publicaciones;
 
 
 }

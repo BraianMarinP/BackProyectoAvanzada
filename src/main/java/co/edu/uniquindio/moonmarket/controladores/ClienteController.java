@@ -1,6 +1,7 @@
 package co.edu.uniquindio.moonmarket.controladores;
 
 import co.edu.uniquindio.moonmarket.dto.*;
+import co.edu.uniquindio.moonmarket.servicios.implementaciones.CategoriaServicioImp;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.ComentarioServicio;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.CompraServicio;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.PublicacionProductoServicio;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/usuarios")
@@ -22,6 +25,8 @@ public class ClienteController {
     private PublicacionProductoServicio publicacionProductoServicio;
     private CompraServicio compraServicio;
     private ComentarioServicio comentarioServicio;
+    private CategoriaServicioImp categoriaServicioImp;
+
     @GetMapping
     public List<UsuarioGetDTO> listar() throws Exception {
         return usuarioServicio.listarUsuarios();
@@ -32,6 +37,11 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, usuarioServicio.obtenerUsuario(codigo) ));
     }
 
+    @GetMapping("/usuarioPorCorreo/{correo}")
+    public ResponseEntity<MensajeDTO> usuarioPorCorreo(@PathVariable String correo) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, usuarioServicio.usuarioPorCorreo(correo)));
+    }
+
     @DeleteMapping("/{codigo}")
     public ResponseEntity<MensajeDTO> eliminar(@PathVariable String codigo) throws Exception{
         usuarioServicio.eliminiarUsuario(codigo);
@@ -39,7 +49,7 @@ public class ClienteController {
     }
 
     @PutMapping("/actualizar")
-    public ResponseEntity<MensajeDTO> actualizar( @Valid @RequestBody UsuarioGetDTO usuario) throws Exception{
+    public ResponseEntity<MensajeDTO> actualizar(@RequestBody UsuarioGetDTO usuario) throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false,
                 usuarioServicio.actualizarUsuario(usuario) ) );
     }
@@ -50,10 +60,10 @@ public class ClienteController {
                 usuarioServicio.cambiarContrasena(codigo,nuevaContrasena) ) );
     }
 
-    @PostMapping("/crearPublicacion/{cedulaUsuario}/{idProducto}")
-    public ResponseEntity<MensajeDTO> crearPublicacion(@RequestParam String cedulaUsuario,@RequestParam int idProducto, @Valid @RequestBody PublicacionProductoDTO publicacion) throws Exception{
+    @PostMapping("/crearPublicacion/{cedulaUsuario}")
+    public ResponseEntity<MensajeDTO> crearPublicacion(@PathVariable String cedulaUsuario, @Valid @RequestBody PublicacionProductoDTO publicacion) throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false,
-                publicacionProductoServicio.crearPublicacionProducto(publicacion, cedulaUsuario, idProducto)));
+                publicacionProductoServicio.crearPublicacionProducto(publicacion, cedulaUsuario)));
     }
 
     @GetMapping("/misPublicaciones/obtener/{cedula}")
@@ -100,6 +110,11 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, publicacionProductoServicio.listarPublicacionesCategoria(categoria)));
     }
 
+    @GetMapping("/Publicaciones/detallePublicacion/{idPublicacion}")
+    public ResponseEntity<MensajeDTO> detallePublicacion(@PathVariable int idPublicacion) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, publicacionProductoServicio.detallePublicacion(idPublicacion)));
+    }
+
     @PutMapping("/Publicaciones/agregarFavorito/{cedula}/{idPublicacion}")
     public ResponseEntity<MensajeDTO> agregarPublicacionFavoritos(@PathVariable String cedula, @PathVariable int idPublicacion) throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, publicacionProductoServicio.agregarPublicacionAFavoritos(cedula, idPublicacion)));
@@ -120,8 +135,36 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, comentarioServicio.crearComentario(comentarioDTO)));
     }
 
-    @PostMapping("/Comprar/{idPublicacon}")
-    public ResponseEntity<MensajeDTO> comprarProducto(@Valid @RequestBody ComentarioDTO comentarioDTO) throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, comentarioServicio.crearComentario(comentarioDTO)));
+    @GetMapping("/Publicaciones/listarComentarios/{idPublicacion}")
+    public ResponseEntity<MensajeDTO> listarComentario(@PathVariable int idPublicacion) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, comentarioServicio.listarComentarios(idPublicacion)));
     }
+
+    @PostMapping("/Comprar")
+    public ResponseEntity<MensajeDTO> comprarProducto(@Valid @RequestBody CompraDTO compraDTO) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, compraServicio.crearCompra(compraDTO)));
+    }
+
+    @GetMapping("/listar/ProductosComprados/{cedula}")
+    public ResponseEntity<MensajeDTO> listarProductosComprados(@PathVariable String cedula){
+        return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(HttpStatus.OK, false, usuarioServicio.listarProductosComprados(cedula)));
+    }
+    
+    @GetMapping("/Categorias/contarProductos")
+    public ResponseEntity<MensajeDTO> contarPorductosCategoria(){
+        return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(HttpStatus.OK, false, categoriaServicioImp.cantidadProductosCategoria()));
+    }
+
+    //*
+
+    @GetMapping("/buscar/barato/{nombreCategoria}")
+    public ResponseEntity<MensajeDTO> buscarPublicacionMasBarataCategoria(@PathVariable String nombreCategoria) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(HttpStatus.OK, false, publicacionProductoServicio.buscarPublicacionMasBarataCategoria(nombreCategoria)));
+    }
+
+    @GetMapping("/buscar/caro/{nombreCategoria}")
+    public ResponseEntity<MensajeDTO> buscarPublicacionMasCaraCategoria(@PathVariable String nombreCategoria) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(new MensajeDTO(HttpStatus.OK, false, publicacionProductoServicio.buscarPublicacionMasCaraCategoria(nombreCategoria)));
+    }
+    //*/
 }

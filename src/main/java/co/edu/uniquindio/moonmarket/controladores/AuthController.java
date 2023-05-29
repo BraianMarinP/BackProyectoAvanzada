@@ -2,6 +2,7 @@ package co.edu.uniquindio.moonmarket.controladores;
 
 import co.edu.uniquindio.moonmarket.dto.MensajeDTO;
 import co.edu.uniquindio.moonmarket.dto.SesionDTO;
+import co.edu.uniquindio.moonmarket.dto.TokenDTO;
 import co.edu.uniquindio.moonmarket.dto.UsuarioDTO;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.SesionServicio;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.UsuarioServicio;
@@ -27,5 +28,11 @@ public class AuthController {
         usuarioServicio.crearUsuario(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MensajeDTO(HttpStatus.CREATED,
                 false, "Cliente creado correctamente"));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<MensajeDTO> refrescarToken(@Valid @RequestBody TokenDTO tokenDTO) throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MensajeDTO(HttpStatus.CREATED,
+                false, sesionServicio.refreshToken(tokenDTO)));
     }
 }

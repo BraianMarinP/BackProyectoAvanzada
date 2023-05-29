@@ -7,6 +7,8 @@ import co.edu.uniquindio.moonmarket.servicios.interfaces.CategoriaServicios;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,11 +18,23 @@ public class CategoriaServicioImp implements CategoriaServicios {
     private final CategoriaRepo categoriaRepo;
 
 
+
+    @Override
+    public List<CategoriaDTO> listarCategorias (){
+        List<Categoria> categorias = categoriaRepo.findAll();
+        List<CategoriaDTO> categoriasDTO = new ArrayList<>();
+        for (Categoria c: categorias) {
+           categoriasDTO.add(convertirCategoriaDTO(c));
+        }
+        return categoriasDTO;
+    }
+
+
     @Override
     public int crearCategoria(CategoriaDTO categoriaDTO) throws Exception {
         Categoria categoria = new Categoria();
         categoria.setNombre(categoriaDTO.getNombre());
-        categoria.setProductos(categoriaDTO.getProductos());
+        //categoria.setProductos(categoriaDTO.getProductos());
         return categoriaRepo.save(categoria).getId();
     }
 
@@ -43,5 +57,19 @@ public class CategoriaServicioImp implements CategoriaServicios {
         }else{
             throw new Exception("La compra producto con id "+idCategoria+" no se encuentra en la base de datos.");
         }
+    }
+
+    public Categoria convertir(CategoriaDTO categoriaDTO){
+        return categoriaRepo.buscarCategoria(categoriaDTO.getNombre());
+    }
+
+    public CategoriaDTO convertirCategoriaDTO(Categoria categoria){
+        CategoriaDTO categoriaDTO = new CategoriaDTO();
+        categoriaDTO.setNombre(categoria.getNombre());
+        return categoriaDTO;
+    }
+
+    public List<Object[]> cantidadProductosCategoria(){
+        return categoriaRepo.cantidadProductosCategoria();
     }
 }

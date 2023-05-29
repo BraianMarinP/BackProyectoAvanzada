@@ -14,9 +14,10 @@ import java.io.Serializable;
 @Setter
 public class Imagen implements Serializable {
 
-    @Id
+    //@Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    //private String id;
+    @Id
     private String url;
 
     @ManyToOne

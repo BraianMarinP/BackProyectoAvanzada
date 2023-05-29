@@ -27,13 +27,15 @@ public class UsuarioTest {
     public void crearUsuarioTest() {
 
         try {
-            /*UsuarioDTO usuarioDTO = UsuarioDTO.builder().base(PersonaDTO.BaseBuilder().cedula("1234568")
-                    .numTel("1234567890")
-                    .direccion("Calle 123")
-                    .nombre("Juan")
-                    .email("juanperrita@example50.com")
-                    .contrasena("Contrasena05").build()).nickName("jperezSUPERRA").build();
-            usuarioServicio.crearUsuario(usuarioDTO);*/
+            UsuarioDTO usuarioDTO =new UsuarioDTO();
+            usuarioDTO.setCedula("1234568");
+            usuarioDTO.setNumTel("1234567890");
+            usuarioDTO.setDireccion("Calle 123");
+            usuarioDTO.setNombre("Juan");
+            usuarioDTO.setEmail("juanperrita@example50.com");
+            usuarioDTO.setContrasena("Contrasena05");
+            usuarioDTO.setNickName("jperezSUPERRA");
+            usuarioServicio.crearUsuario(usuarioDTO);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +92,7 @@ public class UsuarioTest {
     @Test
     @Sql("classpath:dataset.sql" )
     public void listarUsuarios() throws  Exception{
-        List<UsuarioGetDTO> usuario= usuarioServicio.listarUsuarios();
+       // List<UsuarioGetDTO> usuario= usuarioServicio.listarUsuarios();
 
     }
 

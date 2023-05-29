@@ -13,6 +13,6 @@ public class UsuarioGetDTO extends PersonaDTO{
 
     private String nickName;
 
-    private EstadoUsuario estado;
+    //private EstadoUsuario estado;
 
 }

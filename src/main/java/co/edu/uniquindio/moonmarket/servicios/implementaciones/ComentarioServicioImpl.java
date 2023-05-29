@@ -33,6 +33,31 @@ public class ComentarioServicioImpl implements ComentarioServicio {
     @Autowired
     private EmailServicio emailServicio;
 
+
+    @Override
+    public List<ComentarioDTO> listarComentarios(int idPublicacion){
+        List<ComentarioDTO> comentariosDTO = new ArrayList<>();
+        List<Comentario> comentarios = comentarioRepo.obtenerComentariosPublicacion(idPublicacion);
+        for (Comentario c: comentarios) {
+            comentariosDTO.add(convertirDTO(c));
+        }
+        return comentariosDTO;
+    }
+
+
+
+    private ComentarioDTO convertirDTO(Comentario comentario){
+        ComentarioDTO comentarioDTO = new ComentarioDTO();
+        comentarioDTO.setId(comentario.getId());
+        comentarioDTO.setPuntuacion(comentario.getPuntuacion());
+        comentarioDTO.setDescripcion(comentario.getDescripcion());
+        comentarioDTO.setCedulaUsuario(comentario.getUsuario().getNombre());
+        comentarioDTO.setIdPublicacion(comentario.getPublicacion().getIdPublicacionProducto());
+        return  comentarioDTO;
+    }
+
+
+
     @Override
     public int crearComentario(ComentarioDTO comentarioDTO) throws Exception {
         Comentario comentario= new Comentario();

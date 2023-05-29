@@ -8,7 +8,7 @@ public interface ModeradorServicio {
 
     String actualizarModerador(String cedula, ModeradorGetDTO moderadorDTO) throws Exception;
 
-    Moderador buscarModerador(String cedulaModerador) throws Exception;
+    ModeradorDTO buscarModerador(String cedulaModerador) throws Exception;
 
     String cambiarContrasena(String cedula, String nuevaContrasena) throws Exception;
 

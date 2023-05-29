@@ -19,8 +19,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ProductoServicioImp implements ProductoServicio {
     private final ProductoRepo productoRepo;
-    private final UsuarioServicio usuarioServicio;
     private final CategoriaRepo categoriaRepo;
+    private final CategoriaServicioImp categoriaServicioImp;
 
     @Override
     public int crearProducto(ProductoDTO productoDTO) throws Exception {
@@ -29,7 +29,6 @@ public class ProductoServicioImp implements ProductoServicio {
         producto.setNombre( productoDTO.getNombre() );
         producto.setId(productoDTO.getId());
         producto.setDescripcion( productoDTO.getDescripcion() );
-        producto.setPublicaciones(null);
         return productoRepo.save( producto ).getId();
     }
 
@@ -70,5 +69,16 @@ public class ProductoServicioImp implements ProductoServicio {
         return producto.get();
     }
 
+    public ProductoDTO convertirProductoDTO(Producto producto){
+        ProductoDTO productoDTO = new ProductoDTO();
+        productoDTO.setDescripcion(producto.getDescripcion());
+        productoDTO.setId(producto.getId());
+        productoDTO.setNombre(producto.getNombre());
+        productoDTO.setCategorias(new ArrayList<>());
+        for (Categoria categoria: producto.getCategorias()) {
+            productoDTO.getCategorias().add(categoriaServicioImp.convertirCategoriaDTO(categoria));
+        }
+        return productoDTO;
+    }
 
 }

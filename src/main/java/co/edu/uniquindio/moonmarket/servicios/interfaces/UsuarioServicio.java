@@ -1,7 +1,10 @@
 package co.edu.uniquindio.moonmarket.servicios.interfaces;
 
+import co.edu.uniquindio.moonmarket.dto.ProductoDTO;
+import co.edu.uniquindio.moonmarket.dto.PublicacionProductoDTO;
 import co.edu.uniquindio.moonmarket.dto.UsuarioDTO;
 import co.edu.uniquindio.moonmarket.dto.UsuarioGetDTO;
+import co.edu.uniquindio.moonmarket.entidades.Producto;
 import co.edu.uniquindio.moonmarket.entidades.Usuario;
 
 import java.util.List;
@@ -14,4 +17,6 @@ public interface UsuarioServicio {
     List<UsuarioGetDTO> listarUsuarios() throws Exception;
     Usuario obtener(String codigoUsuario) throws Exception;
     String cambiarContrasena(String cedula, String nuevaContrasena) throws Exception;
+    List<PublicacionProductoDTO> listarProductosComprados(String cedula);
+    UsuarioGetDTO usuarioPorCorreo(String correo) throws Exception;
 }

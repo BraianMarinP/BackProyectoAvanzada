@@ -47,11 +47,11 @@ public class ModeradorServicioImp implements ModeradorServicio {
     }
 
     @Override
-    public Moderador buscarModerador(String cedulaModerador) throws Exception{
+    public ModeradorDTO buscarModerador(String cedulaModerador) throws Exception{
         Optional<Moderador> moderadorBuscado = moderadorRepo.findById(cedulaModerador);
         if(moderadorBuscado.isPresent()){
             Moderador moderadorEncontrado = moderadorBuscado.get();
-            return moderadorEncontrado;
+            return convertirADTO(moderadorEncontrado);
         }else{
             throw new Exception("El moderador con cédula: "+cedulaModerador+"no existe.");
         }
@@ -73,6 +73,23 @@ public class ModeradorServicioImp implements ModeradorServicio {
         }
         return cedula;
 
+    }
+
+    private ModeradorDTO convertirADTO(Moderador moderador){
+        ModeradorDTO moderadorDTO = new ModeradorDTO();
+        moderadorDTO.setContrasena(moderador.getContrasena());
+        if(moderador.getImagen() != null){
+            moderadorDTO.setIdImagen(moderador.getImagen().getUrl());
+        }else {
+            moderadorDTO.setIdImagen(null);
+        }
+
+        moderadorDTO.setEmail(moderador.getEmail());
+        moderadorDTO.setNombre(moderador.getNombre());
+        moderadorDTO.setDireccion(moderador.getDireccion());
+        moderadorDTO.setCedula(moderador.getCedula());
+        moderadorDTO.setNumTel(moderador.getNumTel());
+        return moderadorDTO;
     }
 
 }

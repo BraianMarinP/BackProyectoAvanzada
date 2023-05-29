@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class CompraDTO {
     private MedioPago medioPago;
     private List<CompraProductoDTO> productos;
     private String codigoUsuario;
+    private LocalDate fecha;
 
 
 }

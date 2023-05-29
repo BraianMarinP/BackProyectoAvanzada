@@ -26,7 +26,7 @@ public class Producto implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_categoria"))
     private List<Categoria> categorias;
 
-    @OneToMany(mappedBy = "producto")
-    private List<PublicacionProducto> publicaciones;
+    @OneToOne(mappedBy = "producto")
+    private PublicacionProducto publicacion;
 
 }

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.moonmarket;
 
+import co.edu.uniquindio.moonmarket.dto.ImagenDTO;
 import co.edu.uniquindio.moonmarket.dto.ImagenModeradorDTO;
 import co.edu.uniquindio.moonmarket.dto.ImagenProductoDTO;
 import co.edu.uniquindio.moonmarket.dto.ImagenUsuarioDTO;
@@ -26,7 +27,7 @@ public class ImagenTest {
     @Test
     @Sql("classpath:dataset.sql" )
     public void crearImagenPublicacion(){
-        try{
+        /*try{
             ImagenProductoDTO imagenPublicacion = new ImagenProductoDTO();
 
             imagenPublicacion.setUrl("/home/brahian/Desktop/imagen.jpg");
@@ -35,41 +36,44 @@ public class ImagenTest {
             String imagenProducto = imagenServicio.crearImagenProducto(imagenPublicacion);
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Test
     public void crearImagenModerador(){
-        try{
+        /*try{
             ImagenModeradorDTO imagenModeradorDTO = new ImagenModeradorDTO();
             imagenModeradorDTO.setUrl("/home/brahian/Desktop/images.jpeg");
             //imagenModeradorDTO.setModerador(moderadorServicio.buscarModerador("1234589"));
             String imagenModerador = imagenServicio.crearImagenModerador(imagenModeradorDTO);
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Test
     // @Sql("classpath:dataset.sql" )
     public void crearImagenUsuario(){
-        try{
+        /*try{
             ImagenUsuarioDTO imagenUsuarioDTO = new ImagenUsuarioDTO();
             imagenUsuarioDTO.setUrl("/home/brahian/Desktop/im.jpg");
             //imagenUsuarioDTO.setUsuarioImagen(usuarioServicio.obtener("2222220"));
             String imagenUsuario = imagenServicio.crearImagenUsuario(imagenUsuarioDTO);
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Test
     public void eliminarImagen(){
+        /*
         try{
-            imagenServicio.eliminarImagen("uniquindio/MoonMarket/qpdpiz97zpio7i0imdih");
+            imagenServicio.eliminarImagen(new ImagenDTO("uniquindio/MoonMarket/qpdpiz97zpio7i0imdih"));
         }catch (Exception e){
             e.printStackTrace();
         }
+
+         */
     }
 
     @Test

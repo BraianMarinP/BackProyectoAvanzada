@@ -4,6 +4,7 @@ import co.edu.uniquindio.moonmarket.dto.CompraDTO;
 import co.edu.uniquindio.moonmarket.dto.CompraProductoDTO;
 import co.edu.uniquindio.moonmarket.entidades.Compra;
 import co.edu.uniquindio.moonmarket.entidades.CompraProducto;
+import co.edu.uniquindio.moonmarket.repositorios.CompraProductoRepo;
 import co.edu.uniquindio.moonmarket.repositorios.CompraRepo;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.CompraProductoServicio;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.CompraServicio;
@@ -21,55 +22,79 @@ public class CompraServicioImp implements CompraServicio {
     private final CompraRepo compraRepo;
     private final PublicacionProductoServicioImp publicacionProductoServicioImp;
     private final CompraProductoServicio compraProductoServicio;
-
+    private final CompraProductoRepo compraProductoRepo;
     private final UsuarioServicio usuarioServicio;
 
     @Override
-    public int crearCompra(CompraDTO compraDTO, HashMap<Integer, Integer> publicacionUnidades) throws Exception {
+    public int crearCompra(CompraDTO compraDTO) throws Exception {
 
         //Creamos una nueva compra
         Compra compra = new Compra();
         compra.setFecha(LocalDate.now());
         compra.setMedioPago(compraDTO.getMedioPago());
         compra.setUsuario( usuarioServicio.obtener(compraDTO.getCodigoUsuario()) );
-        compra.setValorTotal(calcularTotal(publicacionUnidades));
+        compra.setValorTotal(calcularTotal(compraDTO.getProductos()));
+        compra.setProductos(new ArrayList<>());
         /*
         Guardamos la compra para luego asociarla a la lista de productos (CompraProducto)
         ya que primero se necesita una compra y una publicacion para poder crear un registro de CompraProducto
          */
         int idCompra = compraRepo.save(compra).getId();
+        System.out.println( "__________________________Compraid__________________________________________" + idCompra);
+        Compra compraAux = compraRepo.findById(idCompra).get();
         /*
         Ahora es cuando asociamos las CompraProducto con compra por cada producto (publicacion)
         que se compró
          */
+        for (CompraProductoDTO compraProductoDTO: compraDTO.getProductos()) {
+            int idDetalle = compraProductoServicio.crearCompraProducto(compraProductoDTO);
+            CompraProducto compraProducto = compraProductoRepo.findById(idDetalle).get();
+            compraProducto.setCompra(compraAux);
+            compraProductoRepo.save(compraProducto);
+            //compraAux.getProductos().add(compraProductoServicio.obtenerCompraProducto(idDetalle));
+        }
+
+        /*
         for (Map.Entry<Integer, Integer> entry : publicacionUnidades.entrySet()) {
             Integer idPublicacion = entry.getKey();
             Integer unidades = entry.getValue();
             CompraProductoDTO compraProductoDTO = new CompraProductoDTO();
+            compraProductoDTO.setIdCompra(idCompra);
             compraProductoDTO.setIdPublicacion(idPublicacion);
             compraProductoDTO.setCantidad(unidades);
-            compraProductoServicio.crearCompraProducto(compraProductoDTO);
-        }
-        descontarUnidadesPublicacion(publicacionUnidades);
+            int idDetalle = compraProductoServicio.crearCompraProducto(compraProductoDTO);
+            compraAux.getProductos().add(compraProductoServicio.obtenerCompraProducto(idDetalle));
+        }*/
+
+        //compraRepo.save(compraAux).getId();
+        descontarUnidadesPublicacion(compraDTO.getProductos());
         return idCompra;
     }
 
-    private float calcularTotal(HashMap<Integer, Integer> publicacionUnidades) throws Exception {
+    private float calcularTotal(List<CompraProductoDTO> compraProductoDTOS) throws Exception {
         float total = 0;
+        for (CompraProductoDTO comaCompraProductoDTO: compraProductoDTOS) {
+            total += comaCompraProductoDTO.getCantidad() * publicacionProductoServicioImp.obtenerPublicacionProducto(comaCompraProductoDTO.getIdPublicacion()).getPrecio();
+        }
+        /*
         for (Map.Entry<Integer, Integer> entry : publicacionUnidades.entrySet()) {
             Integer idPublicacion = entry.getKey();
             Integer unidades = entry.getValue();
             total += unidades * publicacionProductoServicioImp.obtenerPublicacionProducto(idPublicacion).getPrecio();
-        }
+        }*/
         return total;
     }
 
-    private void descontarUnidadesPublicacion(HashMap<Integer, Integer> publicacionUnidades) throws Exception {
-        for (Map.Entry<Integer, Integer> entry : publicacionUnidades.entrySet()) {
+    private void descontarUnidadesPublicacion(List<CompraProductoDTO> compraProductoDTOS) throws Exception {
+        for (CompraProductoDTO comaCompraProductoDTO: compraProductoDTOS) {
+            publicacionProductoServicioImp.descontarUnidadesPublicacion(comaCompraProductoDTO.getIdPublicacion(), comaCompraProductoDTO.getCantidad());
+        }
+
+        /*for (Map.Entry<Integer, Integer> entry : publicacionUnidades.entrySet()) {
             Integer idPublicacion = entry.getKey();
             Integer unidades = entry.getValue();
             publicacionProductoServicioImp.descontarUnidadesPublicacion(idPublicacion, unidades);
-        }
+        }*/
     }
 
     private float calcularValorTotal(List<CompraProducto> compraProductoList) {
@@ -108,12 +133,12 @@ public class CompraServicioImp implements CompraServicio {
         for(CompraProducto cp : compra.getProductos()){
             lista.add( new CompraProductoDTO(cp.getCantidad(), cp.getPublicacion().getIdPublicacionProducto(), cp.getCompra().getId()));
         }
-
         return new CompraDTO(
                 compra.getValorTotal(),
                 compra.getMedioPago(),
                 lista,
-                compra.getUsuario().getCedula()
+                compra.getUsuario().getCedula(),
+                compra.getFecha()
         );
 
     }

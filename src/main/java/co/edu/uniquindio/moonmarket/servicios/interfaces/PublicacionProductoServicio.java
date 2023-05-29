@@ -7,9 +7,9 @@ import co.edu.uniquindio.moonmarket.entidades.PublicacionProducto;
 import java.util.List;
 
 public interface PublicacionProductoServicio {
-    int crearPublicacionProducto(PublicacionProductoDTO publicacionProductoDTO, String cedulaCreador, int idProducto) throws Exception;
+    int crearPublicacionProducto(PublicacionProductoDTO publicacionProductoDTO, String cedulaCreador) throws Exception;
     PublicacionProducto obtenerPublicacionProducto(int idPublicacion) throws Exception;
-    List<PublicacionProducto> obtenerPublicacionesUsuario(String cedulaUsuario) throws Exception;
+    List<PublicacionProductoDTO> obtenerPublicacionesUsuario(String cedulaUsuario) throws Exception;
     int actualizarPublicacionProducto(PublicacionProductoDTO publicacionProducto, int idPublicacion, int idProducto) throws Exception;
     int eliminarPublicacionProducto(int idPublicacion) throws Exception;
     int alternarEstadoPublicacion(EstadoPublicacion estadoPublicacion, int idPublicacion) throws Exception;
@@ -22,5 +22,11 @@ public interface PublicacionProductoServicio {
 
     int agregarPublicacionAFavoritos(String cedulaUsuario, int idPublicacion) throws Exception;
     int eliminarPublicacionDeFavoritos(String cedulaUsuario, int idPublicacion) throws Exception;
+
+    PublicacionProductoDTO buscarPublicacionMasBarataCategoria(String nombreCategoria) throws Exception;
+
+    PublicacionProductoDTO detallePublicacion(int idPublicacion) throws Exception;
+
+    PublicacionProductoDTO buscarPublicacionMasCaraCategoria(String nombreCategoria) throws Exception;
 
 }

@@ -12,4 +12,6 @@ import lombok.Setter;
 public class TokenDTO {
     @NotNull
     private String token;
+    //Especificado en la guia 19 casi al final
+    private String refreshToken;
 }

@@ -1,8 +1,12 @@
 package co.edu.uniquindio.moonmarket.servicios.implementaciones;
 
+import co.edu.uniquindio.moonmarket.dto.ProductoDTO;
+import co.edu.uniquindio.moonmarket.dto.PublicacionProductoDTO;
 import co.edu.uniquindio.moonmarket.dto.UsuarioDTO;
 import co.edu.uniquindio.moonmarket.dto.UsuarioGetDTO;
 import co.edu.uniquindio.moonmarket.entidades.EstadoUsuario;
+import co.edu.uniquindio.moonmarket.entidades.Producto;
+import co.edu.uniquindio.moonmarket.entidades.PublicacionProducto;
 import co.edu.uniquindio.moonmarket.entidades.Usuario;
 import co.edu.uniquindio.moonmarket.repositorios.UsuarioRepo;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.UsuarioServicio;
@@ -22,6 +26,7 @@ public class UsuarioServicioImp implements UsuarioServicio {
     private final UsuarioRepo usuarioRepo;
     private final PublicacionProductoServicioImp publicacionProductoServicioImp;
     private final PasswordEncoder passwordEncoder;
+    private final ProductoServicioImp productoServicioImp;
     @Override
     public String crearUsuario(UsuarioDTO usuarioDTO) throws Exception{
 
@@ -78,6 +83,12 @@ public class UsuarioServicioImp implements UsuarioServicio {
             usuarioGetDTO.add(convertirGetDTO(user));
         }
         return usuarioGetDTO;
+    }
+
+    @Override
+    public UsuarioGetDTO usuarioPorCorreo(String correo) throws Exception{
+        Usuario usuario = usuarioRepo.buscarUsuario(correo);
+        return convertirGetDTO(usuario);
     }
 
     @Override
@@ -164,5 +175,15 @@ public class UsuarioServicioImp implements UsuarioServicio {
             throw  new Exception("El usuario con cédula "+cedula+" no se encuentra registrado en la base de datos");
         }
         return cedula;
+    }
+
+    @Override
+    public List<PublicacionProductoDTO> listarProductosComprados(String cedula){
+        List<PublicacionProducto> publicacionProductos = usuarioRepo.listarProductosComprados(cedula);
+        List<PublicacionProductoDTO> publicacionProductoDTOS = new ArrayList<>();
+        for (PublicacionProducto publicacionProducto: publicacionProductos) {
+            publicacionProductoDTOS.add(publicacionProductoServicioImp.convertir(publicacionProducto));
+        }
+        return publicacionProductoDTOS;
     }
 }

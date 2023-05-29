@@ -1,6 +1,8 @@
 package co.edu.uniquindio.moonmarket.servicios.implementaciones;
 
+import co.edu.uniquindio.moonmarket.dto.ImagenDTO;
 import co.edu.uniquindio.moonmarket.servicios.interfaces.CloudinaryServicio;
+import co.edu.uniquindio.moonmarket.servicios.interfaces.ImagenServicio;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.Map;
 @Service
 public class CloudinaryServicioImpl implements CloudinaryServicio{
     private final Cloudinary cloudinary;
+
     public CloudinaryServicioImpl(){
         Map<String, String> config = new HashMap<>();
         config.put("cloud_name", "dljinqrho");
@@ -24,12 +27,13 @@ public class CloudinaryServicioImpl implements CloudinaryServicio{
     }
     @Override
     public Map subirImagen(File file, String carpeta) throws Exception{
+
         return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder",
                 String.format("uniquindio/%s", carpeta)));
     }
     @Override
-    public Map eliminarImagen(String idImagen) throws Exception{
-        return cloudinary.uploader().destroy(idImagen, ObjectUtils.emptyMap());
+    public Map eliminarImagen(ImagenDTO idImagen) throws Exception{
+        return cloudinary.uploader().destroy(idImagen.getId(), ObjectUtils.emptyMap());
     }
     @Override
     public File convertir(MultipartFile imagen) throws IOException {

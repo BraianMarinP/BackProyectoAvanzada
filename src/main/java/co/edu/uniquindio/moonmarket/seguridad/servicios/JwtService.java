@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
-    @Value("${jwt.expiration}")
+    @Value("3600000")
     private long jwtExpiration;
     @Value("${jwt.refresh_expiration}")
     private long refreshExpiration;

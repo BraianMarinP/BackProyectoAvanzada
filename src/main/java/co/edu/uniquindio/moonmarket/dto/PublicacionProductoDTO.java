@@ -17,11 +17,13 @@ import java.util.List;
 @Getter
 @Setter
 public class PublicacionProductoDTO {
+
+    private int idPublicacion;
     private String titulo;
-    private int precio;
+    private float precio;
     private int cantidad;
     private List<String> idImagenes;
-    private int producto;
+    private ProductoDTO producto;
     private String creador;
 
 }

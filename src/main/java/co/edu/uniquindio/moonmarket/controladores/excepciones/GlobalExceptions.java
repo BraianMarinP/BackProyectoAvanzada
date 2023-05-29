@@ -22,6 +22,7 @@ public class GlobalExceptions {
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<MensajeDTO> generalException(Exception e){
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body( new
                 MensajeDTO(HttpStatus.INTERNAL_SERVER_ERROR, true, e.getMessage()) );
     }

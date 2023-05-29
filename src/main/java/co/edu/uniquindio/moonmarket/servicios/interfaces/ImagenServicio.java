@@ -1,14 +1,18 @@
 package co.edu.uniquindio.moonmarket.servicios.interfaces;
 
+import co.edu.uniquindio.moonmarket.dto.ImagenDTO;
 import co.edu.uniquindio.moonmarket.dto.ImagenModeradorDTO;
 import co.edu.uniquindio.moonmarket.dto.ImagenProductoDTO;
 import co.edu.uniquindio.moonmarket.dto.ImagenUsuarioDTO;
 
-public interface ImagenServicio {
-    String crearImagenUsuario(ImagenUsuarioDTO imagenUsuarioDTO) throws Exception;
-    String crearImagenModerador(ImagenModeradorDTO imagenModeradorDTO) throws Exception;
-    String crearImagenProducto(ImagenProductoDTO imagenProductoDTO) throws Exception;
+import java.io.File;
+import java.util.Map;
 
-    String eliminarImagen(String id) throws Exception;
+public interface ImagenServicio {
+    Map<String, String> crearImagenUsuario(File imagenSubir, String cedulaUsuario) throws Exception;
+    Map<String, String> crearImagenModerador(File imagenSubir, String cedulaModerador) throws Exception;
+    String crearImagenProducto(File imagenSubir, int idPublicacion) throws Exception;
+
+    String eliminarImagen(String idIimagen) throws Exception;
 
 }

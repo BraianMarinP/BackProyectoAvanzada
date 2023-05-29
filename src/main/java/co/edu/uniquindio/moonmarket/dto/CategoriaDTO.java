@@ -18,7 +18,7 @@ public class CategoriaDTO {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
-    private List<Producto> productos;
+    //@Column(nullable = false)
+    //private List<Producto> productos;
 
 }

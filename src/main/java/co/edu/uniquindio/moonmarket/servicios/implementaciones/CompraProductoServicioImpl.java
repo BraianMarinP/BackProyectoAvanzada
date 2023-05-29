@@ -22,7 +22,7 @@ public class CompraProductoServicioImpl implements CompraProductoServicio {
     @Override
     public int crearCompraProducto(CompraProductoDTO compraProductoDTO) throws Exception {
         CompraProducto nuevoDetalle = new CompraProducto();
-        nuevoDetalle.setCompra(compraRepo.findById(compraProductoDTO.getIdCompra()).get());
+        //nuevoDetalle.setCompra(compraRepo.findById(compraProductoDTO.getIdCompra()).get());
         nuevoDetalle.setPublicacion(publicacionProductoRepo.findById(compraProductoDTO.getIdPublicacion()).get());
         nuevoDetalle.setCantidad(compraProductoDTO.getCantidad());
         return compraProductoRepo.save(nuevoDetalle).getIdCompraProducto();
